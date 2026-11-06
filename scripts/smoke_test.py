@@ -61,7 +61,7 @@ def main() -> None:
         import fastapi, pandas, sklearn  # noqa: F401
         check("Dependencias (pandas, scikit-learn, fastapi)", True)
     except ImportError as exc:
-        check("Dependencias", False, f"{exc}. Ejecute: pip install -e .[dev]")
+        check("Dependencias", False, f"{exc}. Ejecute: uv sync --extra dev")
         return resumen()
 
     try:

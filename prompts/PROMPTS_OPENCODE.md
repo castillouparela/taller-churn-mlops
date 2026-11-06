@@ -129,7 +129,7 @@ version_modelo y aviso de revisión humana; manejador de RequestValidationError 
 {"error": "Entrada inválida", "detalle": [{"campo", "mensaje"}]}; 503 si el modelo no cargó; 500 genérico.
 Carga el modelo en lifespan. Usa src/churn/predict.py para puntuar.
 ```
-Verificar: `uvicorn churn.api:app --reload` y abrir http://localhost:8000/docs
+Verificar: `uv run uvicorn churn.api:app --reload` y abrir http://localhost:8000/docs
 
 **P3.g · Pruebas (T014)**
 ```

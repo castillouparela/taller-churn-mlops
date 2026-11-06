@@ -31,10 +31,7 @@ ollama pull $Modelo
 ollama create $Nombre -f $MF
 
 Write-Host "==> 6/7 Entorno Python del proyecto"
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -e ".[dev]"
+uv sync --extra dev
 
 Write-Host "==> 7/7 Smoke test"
-python scripts\smoke_test.py
+uv run python scripts\smoke_test.py

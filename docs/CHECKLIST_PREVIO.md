@@ -16,7 +16,7 @@
 ### El día del taller (60 min antes)
 - [ ] Repo solución: `python tareas.py todo` y `pytest` en verde.
 - [ ] `ollama run taller-coder "hola"` para precargar el modelo.
-- [ ] API corriendo en el repo solución para la demo inicial (`uvicorn churn.api:app`).
+- [ ] API corriendo en el repo solución para la demo inicial (`uv run uvicorn churn.api:app`).
 - [ ] Rúbricas y tarjetas de prompts impresas.
 - [ ] Temporizador visible y diapositivas abiertas.
 
@@ -41,8 +41,8 @@
 
 ### Proyecto
 - [ ] Repositorio descomprimido o clonado y abierto en VS Code
-- [ ] Entorno virtual creado y activado; `pip install -e ".[dev]"`
-- [ ] `python scripts/smoke_test.py` termina con **"Todo listo para el taller."**
+- [ ] Dependencias sincronizadas y entorno creado con `uv sync --extra dev` (no hace falta activarlo).
+- [ ] `uv run python scripts/smoke_test.py` termina con **"Todo listo para el taller."**
 - [ ] En OpenCode, `/models` muestra **Ollama (local) → taller-coder** y responde a "Hola"
 
 > Si algo falla, no se preocupe: traiga la captura del error. Hay Plan B para todos los casos.
