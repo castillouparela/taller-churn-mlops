@@ -24,4 +24,4 @@ Proyecto de taller: predicción de churn en telecomunicaciones. Fuente de verdad
 
 ## Comandos útiles
 - Datos: `python -m churn.dataset` · Entrenar: `python -m churn.train` · Drift: `python -m churn.drift`
-- API: `uvicorn churn.api:app --reload` · Pruebas: `pytest` · Verificación: `python scripts/smoke_test.py`
+- Entorno: `uv sync --extra dev` · API: `uv run uvicorn churn.api:app --reload` · Pruebas: `uv run pytest` · Verificación: `uv run python scripts/smoke_test.py`

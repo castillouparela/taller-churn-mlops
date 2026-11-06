@@ -1,7 +1,7 @@
 """API de churn: /predict, /predict/lote, /health, /metrics y /dashboard.
 
 Ejecutar:
-    uvicorn churn.api:app --reload --port 8000
+    uv run uvicorn churn.api:app --reload --port 8000
 Documentación interactiva: http://localhost:8000/docs
 """
 from __future__ import annotations

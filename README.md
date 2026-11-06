@@ -77,15 +77,11 @@ en la terminal integrada (atajo: `Ctrl+Esc` en Windows/Linux, `Cmd+Esc` en macOS
 
 **Entorno del proyecto**
 ```bash
-# macOS / Linux
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+uv sync --extra dev
 ```
-```powershell
-# Windows
-py -3.12 -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-```
+`uv sync` crea `.venv` si no existe e instala el proyecto con sus dependencias de desarrollo declaradas en
+`pyproject.toml`. No es necesario activar el entorno: use `uv run` para ejecutar comandos dentro de él. El archivo
+`uv.lock` fija las versiones; consérvelo y súbalo junto con el proyecto para que todos recreen el mismo entorno.
 
 **Spec Kit en este repo** (crea `.opencode/commands/speckit.*`):
 ```bash
@@ -95,8 +91,8 @@ specify integration install opencode
 
 ## 4. Smoke test
 ```bash
-python scripts/smoke_test.py            # verifica herramientas, Ollama, modelo y API
-python scripts/smoke_test.py --sin-ia   # sólo la parte Python (Plan B)
+uv run python scripts/smoke_test.py            # verifica herramientas, Ollama, modelo y API
+uv run python scripts/smoke_test.py --sin-ia   # sólo la parte Python (Plan B)
 ```
 Salida esperada al final: `Todo listo para el taller.`
 
@@ -130,15 +126,15 @@ las descubre automáticamente; el agente las carga con su herramienta `skill`. E
 
 ## 6. Uso
 ```bash
-python -m churn.dataset                   # 1. datos  -> data/raw/churn_telco.csv (5000 filas, churn ~25 %)
-python -m churn.train                     # 2. modelo -> models/ (ROC-AUC ~0,81, recall ~0,73, precision ~0,49)
-pytest                                    # 3. pruebas -> 18 passed
-uvicorn churn.api:app --reload            # 4. API en http://localhost:8000/docs
-python scripts/simular_trafico.py         # 5. (otra terminal) tráfico -> http://localhost:8000/dashboard
-python -m churn.drift --escenario crisis  # 6. drift -> reports/metrics/drift.json
-python scripts/simular_trafico.py --escenario crisis --n 500   # el dashboard pasa a "critico"
+uv run python -m churn.dataset                   # 1. datos  -> data/raw/churn_telco.csv (5000 filas, churn ~25 %)
+uv run python -m churn.train                     # 2. modelo -> models/ (ROC-AUC ~0,81, recall ~0,73, precision ~0,49)
+uv run pytest                                    # 3. pruebas -> 18 passed
+uv run uvicorn churn.api:app --reload            # 4. API en http://localhost:8000/docs
+uv run python scripts/simular_trafico.py         # 5. (otra terminal) tráfico -> http://localhost:8000/dashboard
+uv run python -m churn.drift --escenario crisis  # 6. drift -> reports/metrics/drift.json
+uv run python scripts/simular_trafico.py --escenario crisis --n 500   # el dashboard pasa a "critico"
 ```
-Atajos: `python tareas.py <datos|entrenar|probar|api|trafico|drift|smoke|todo>` (o `make <tarea>` en macOS/Linux).
+Atajos: `uv run python tareas.py <datos|entrenar|probar|api|trafico|drift|smoke|todo>` (o `make <tarea>` en macOS/Linux).
 
 **Ejemplo de consulta**
 ```bash

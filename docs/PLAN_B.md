@@ -15,14 +15,19 @@
 2. **Modelo de Ollama**: en una máquina con el modelo descargado, copie la carpeta de modelos:
    - macOS/Linux: `~/.ollama/models` · Windows: `%USERPROFILE%\.ollama\models`
    - En el equipo destino, péguela en la misma ruta y ejecute `ollama list` (no requiere red). Luego `ollama create taller-coder -f Modelfile`.
-3. **Dependencias de Python** (por SO y versión de Python iguales a las de los asistentes):
+3. **Dependencias de Python** (preparar wheels para el mismo SO y versión de Python de los asistentes):
    ```bash
-   pip download -r requirements.txt -d wheels
+   uv lock
+   uv export --locked --extra dev --format requirements.txt --no-hashes --no-emit-project --output-file requirements-offline.txt
+   pip download -r requirements-offline.txt -d wheels
    pip wheel "specify-cli @ git+https://github.com/github/spec-kit.git" -w wheels
+   # Al terminar, borrar requirements-offline.txt (Windows PowerShell: Remove-Item requirements-offline.txt)
    # En el equipo sin red:
-   pip install --no-index --find-links=wheels -e ".[dev]"
-   pip install --no-index --find-links=wheels specify-cli
+   uv sync --offline --find-links wheels --extra dev --locked
+   uv tool install --offline --find-links wheels specify-cli
    ```
+   El flujo normal es `uv sync --extra dev`. `pyproject.toml` declara las dependencias y `uv.lock` fija sus versiones;
+   la exportación `requirements-offline.txt` es temporal y solo sirve para descargar wheels.
 4. **OpenCode**: `npm pack opencode-ai` genera un `.tgz`; en el equipo destino `npm install -g ./opencode-ai-*.tgz`.
    Alternativa: copiar el binario `opencode` ya instalado (`which opencode` / `where opencode`).
    > El paquete npm descarga un binario específico de plataforma al instalarse; **pruebe la instalación offline antes del taller** en cada SO.
@@ -76,7 +81,7 @@ Use la skill `spec-code-review` en lugar de `/speckit.converge`.
 | El agente no usa herramientas / no edita archivos | contexto corto o modelo sin *tool calling* | usar `taller-coder` (num_ctx 16k); evitar modelos sin soporte de herramientas |
 | Respuestas muy lentas | CPU sin GPU, RAM al límite | modelo 3B o servidor compartido |
 | Archivos generados incompletos | límite de salida del modelo | prompt de rescate: "Continúa exactamente desde la línea …" |
-| `Activate.ps1 no se puede cargar` | política de ejecución de Windows | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
-| Puerto 8000 ocupado | otra app | `uvicorn churn.api:app --port 8001` |
-| `ModuleNotFoundError: churn` | no se instaló el paquete | `pip install -e ".[dev]"` con el entorno activado |
+| `uv` no se reconoce | uv no está instalado o no está en `PATH` | instalar uv y abrir una terminal nueva |
+| Puerto 8000 ocupado | otra app | `uv run uvicorn churn.api:app --port 8001` |
+| `ModuleNotFoundError: churn` | no se sincronizó/instaló el proyecto | `uv sync --extra dev` (o `uv sync --offline --find-links wheels --extra dev` sin internet) |
 | `/speckit.*` no aparece | integración no instalada o OpenCode no reiniciado | `specify integration install opencode` y reiniciar OpenCode |

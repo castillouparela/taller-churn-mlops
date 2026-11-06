@@ -30,8 +30,7 @@ ollama pull "$MODELO"
 ollama create "$NOMBRE" -f "$MF"
 
 echo "==> 6/7 Entorno Python del proyecto"
-python3 -m venv .venv && source .venv/bin/activate
-python -m pip install --upgrade pip && pip install -e ".[dev]"
+uv sync --extra dev
 
 echo "==> 7/7 Smoke test"
-python scripts/smoke_test.py
+uv run python scripts/smoke_test.py
