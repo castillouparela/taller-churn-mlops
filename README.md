@@ -28,7 +28,7 @@ ASUM-DM (negocio) → Spec Kit (constitución, spec, plan, tareas) → OpenCode 
 | `prompts/PROMPTS_OPENCODE.md` | Prompts en español, listos para copiar |
 | `plantillas/` | Plantillas ASUM-DM, spec, plan, tasks |
 | `docs/` | Guion del facilitador, gobernanza, ética, rúbrica, plan B, checklist previo, reto |
-| `scripts/` | Instaladores por SO, smoke test, simulador de tráfico, generador de repo alumno |
+| `scripts/` | Instaladores por SO, smoke test y simulador de tráfico |
 
 ## 1. Requisitos
 - 16 GB de RAM recomendado (8 GB con el modelo 3B), 15 GB de disco libre.
@@ -154,12 +154,7 @@ curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" -
 | `GET /metrics` | Operación, negocio (clientes/ingresos en riesgo, priorizados) y drift (PSI) |
 | `GET /dashboard` | Panel visual que lee `/metrics` cada 5 s |
 
-## 7. Repo del alumno
-`python scripts/crear_repo_alumno.py` genera `../taller-churn-mlops-alumno/`: misma estructura y dataset, pero sin
-el código de `src/churn/`, sin pruebas y sin specs (los construyen en el taller). La solución queda en `referencia/`
-como red de seguridad.
-
-## 8. Uso responsable
+## 7. Uso responsable
 Este modelo **apoya** decisiones de retención: no debe usarse para negar servicios, cambiar precios ni tomar decisiones
 automatizadas sin revisión humana. No usa la edad para predecir y audita el impacto por grupo; los logs guardan IDs con hash.
 Los datos son sintéticos. Ver [docs/ETICA.md](docs/ETICA.md) y [docs/GOBERNANZA.md](docs/GOBERNANZA.md).

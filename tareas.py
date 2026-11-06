@@ -1,7 +1,7 @@
 """Atajos multiplataforma (equivalente al Makefile, funciona también en Windows).
 
 Uso: python tareas.py <tarea>
-Tareas: datos, entrenar, entrenar-rf, probar, api, trafico, drift, smoke, todo, limpiar, alumno
+Tareas: datos, entrenar, entrenar-rf, probar, api, trafico, drift, smoke, todo, limpiar
 """
 import shutil
 import subprocess
@@ -18,7 +18,6 @@ TAREAS = {
     "trafico": [[PY, "scripts/simular_trafico.py"], [PY, "scripts/simular_trafico.py", "--escenario", "crisis", "--n", "500"]],
     "drift": [[PY, "-m", "churn.drift", "--escenario", "crisis"]],
     "smoke": [[PY, "scripts/smoke_test.py"]],
-    "alumno": [[PY, "scripts/crear_repo_alumno.py"]],
 }
 TAREAS["todo"] = TAREAS["datos"] + TAREAS["entrenar"] + TAREAS["probar"] + TAREAS["drift"]
 
