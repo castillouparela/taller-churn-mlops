@@ -1,0 +1,5 @@
+# Plan B para laptops con 8 GB de RAM o sin GPU.
+# Crear con:  ollama create taller-coder-mini -f Modelfile.mini
+FROM qwen2.5-coder:3b
+PARAMETER num_ctx 16384
+PARAMETER temperature 0.2

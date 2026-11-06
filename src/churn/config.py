@@ -1,0 +1,65 @@
+"""Configuración central del proyecto (rutas, semillas, umbrales).
+
+Todo valor que afecte resultados vive aquí para garantizar reproducibilidad.
+"""
+from pathlib import Path
+
+# Rutas base (relativas a la raíz del repositorio)
+ROOT = Path(__file__).resolve().parents[2]
+DATA_RAW = ROOT / "data" / "raw" / "churn_telco.csv"
+DATA_PROCESSED = ROOT / "data" / "processed"
+DATA_DRIFT = ROOT / "data" / "drift"
+MODELS_DIR = ROOT / "models"
+MODEL_PATH = MODELS_DIR / "churn_model.joblib"
+MODEL_CARD_PATH = MODELS_DIR / "model_card.json"
+REPORTS_DIR = ROOT / "reports"
+METRICS_PATH = REPORTS_DIR / "metrics" / "evaluacion.json"
+DRIFT_REPORT_PATH = REPORTS_DIR / "metrics" / "drift.json"
+LOGS_DIR = ROOT / "logs"
+PREDICTIONS_LOG = LOGS_DIR / "predicciones.jsonl"
+
+# Reproducibilidad
+SEED = 42
+N_CLIENTES = 5000
+TEST_SIZE = 0.25
+
+# Versión del modelo: cambiarla cada vez que cambien datos, features o algoritmo
+MODEL_VERSION = "1.0.0"
+
+# Columnas del dataset
+TARGET = "churn"
+ID_COL = "id_cliente"
+NUMERIC_FEATURES = [
+    "antiguedad_meses",
+    "cargo_mensual",
+    "reclamos_ult_3m",
+    "uso_datos_gb",
+]
+CATEGORICAL_FEATURES = ["tipo_plan", "metodo_pago", "renovo_contrato"]
+FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+# Atributo sensible: NO entra al modelo, sólo se usa para auditar sesgo
+SENSITIVE_COL = "rango_edad"
+
+# Dominios válidos (se reutilizan en la validación de la API)
+PLANES = ["prepago", "pospago_basico", "pospago_premium"]
+METODOS_PAGO = ["tarjeta_credito", "debito_automatico", "efectivo", "transferencia"]
+RENOVACION = ["si", "no"]
+RANGOS_EDAD = ["18-25", "26-40", "41-60", "60+"]
+
+# Criterios de éxito acordados en business/ASUM-DM.md
+MIN_RECALL = 0.70
+MIN_PRECISION = 0.40
+MIN_ROC_AUC = 0.75
+
+# Niveles de riesgo (el umbral de decisión se calibra al entrenar)
+UMBRAL_DECISION_DEFAULT = 0.50
+UMBRAL_RIESGO_ALTO = 0.70
+
+# Parámetros de negocio para la campaña de retención
+COSTO_CONTACTO = 8.0          # costo por cliente contactado (USD)
+TASA_EXITO_CAMPANA = 0.30     # % de clientes contactados que se retienen
+PRESUPUESTO_CAMPANA = 2000.0  # presupuesto mensual (USD)
+
+# Monitoreo de drift (Population Stability Index)
+PSI_ALERTA = 0.10
+PSI_CRITICO = 0.25

@@ -1,0 +1,8 @@
+# Modelo del taller: Qwen2.5-Coder 7B con contexto ampliado para OpenCode.
+# Crear con:  ollama create taller-coder -f Modelfile
+FROM qwen2.5-coder:7b
+# OpenCode envía prompts largos (herramientas + skills): ampliar contexto.
+# Si la laptop tiene >= 32 GB de RAM puede subir a 32768.
+PARAMETER num_ctx 16384
+# Respuestas más deterministas para que todos obtengan código similar
+PARAMETER temperature 0.2

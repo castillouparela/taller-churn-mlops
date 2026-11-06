@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "ollama/taller-coder",
+  "small_model": "ollama/taller-coder",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "taller-coder": { "name": "Taller - Qwen2.5-Coder 7B (ctx 16k)" },
+        "taller-coder-mini": { "name": "Taller - Qwen2.5-Coder 3B (plan B, ctx 16k)" },
+        "qwen2.5-coder:7b": { "name": "Qwen2.5-Coder 7B (ctx por defecto)" }
+      }
+    }
+  },
+  "instructions": ["AGENTS.md"],
+  "permission": {
+    "skill": { "*": "allow" },
+    "bash": "ask",
+    "edit": "allow"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "tecnicas": {
+    "roc_auc": 0.8112,
+    "precision": 0.4926,
+    "recall": 0.7335,
+    "f1": 0.5894,
+    "umbral": 0.538,
+    "matriz_confusion": {
+      "tn": 690,
+      "fp": 241,
+      "fn": 85,
+      "tp": 234
+    }
+  },
+  "negocio": {
+    "clientes_evaluados": 1250,
+    "clientes_en_riesgo": 475,
+    "pct_en_riesgo": 0.38,
+    "ingresos_mensuales_en_riesgo": 25926.89,
+    "clientes_priorizados": 250,
+    "costo_campana": 2000.0,
+    "ingreso_retenido_esperado": 4262.17,
+    "roi_esperado": 1.131,
+    "tasa_churn_real": 0.2552
+  },
+  "equidad": {
+    "por_grupo": {
+      "18-25": {
+        "n": 257,
+        "tasa_seleccion": 0.3658,
+        "recall": 0.7969
+      },
+      "26-40": {
+        "n": 518,
+        "tasa_seleccion": 0.3958,
+        "recall": 0.75
+      },
+      "41-60": {
+        "n": 342,
+        "tasa_seleccion": 0.3596,
+        "recall": 0.6988
+      },
+      "60+": {
+        "n": 133,
+        "tasa_seleccion": 0.3985,
+        "recall": 0.65
+      }
+    },
+    "ratio_impacto_dispar": 0.9024
+  },
+  "criterios": {
+    "roc_auc": true,
+    "recall": true,
+    "precision": true
+  }
+}

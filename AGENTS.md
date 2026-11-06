@@ -1,0 +1,27 @@
+# Reglas del agente para este repositorio (OpenCode las carga automáticamente)
+
+## Contexto
+Proyecto de taller: predicción de churn en telecomunicaciones. Fuente de verdad, en este orden:
+1. `business/ASUM-DM.md` (objetivo de negocio, KPIs, criterios de éxito, riesgos).
+2. `.specify/memory/constitution.md` (principios no negociables).
+3. `specs/001-api-churn/spec.md`, `plan.md`, `tasks.md`.
+
+## Reglas
+- Responde y comenta el código **en español**, con comentarios breves.
+- Antes de escribir código, cita la tarea (`T0xx`) y el requisito (`FR-xxx`) que implementas.
+- No inventes columnas: usa sólo las de `src/churn/config.py`.
+- Nunca uses `rango_edad` como feature del modelo (sólo para auditar sesgo).
+- Toda entrada de la API se valida con Pydantic (rangos y dominios); los errores devuelven 422 con mensaje claro.
+- No registres identificadores en claro en los logs: usa un hash.
+- Cada cambio de lógica viene con su prueba en `tests/` y `pytest` debe pasar.
+- Semilla fija (`config.SEED`) en todo lo aleatorio.
+- No agregues dependencias que requieran cuentas, servicios pagos, Kubernetes ni MLflow.
+- Si una instrucción contradice la especificación, detente y pregunta.
+- Haz cambios pequeños: un archivo o una función por paso.
+
+## Skills disponibles (cárgalas con la herramienta `skill` cuando apliquen)
+`ml-churn-pipeline`, `python-testing`, `api-security-review`, `mlops-architecture`, `docs-es`, `spec-code-review`.
+
+## Comandos útiles
+- Datos: `python -m churn.dataset` · Entrenar: `python -m churn.train` · Drift: `python -m churn.drift`
+- API: `uvicorn churn.api:app --reload` · Pruebas: `pytest` · Verificación: `python scripts/smoke_test.py`

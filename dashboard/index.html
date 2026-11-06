@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitor de Churn</title>
+<style>
+  /* Dashboard mínimo sin dependencias externas: funciona sin internet */
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2433; --muted:#667085; --ok:#12805c; --warn:#b54708; --bad:#b42318; --line:#e4e7ec; --acc:#1f5eff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1419; --card:#18202a; --ink:#e6e9ee; --muted:#98a2b3; --line:#2a3441; --acc:#6d95ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:20px 24px 8px; display:flex; flex-wrap:wrap; gap:12px; align-items:baseline; justify-content:space-between; }
+  h1 { font-size:20px; margin:0; } .muted { color:var(--muted); font-size:13px; }
+  main { padding:8px 24px 32px; display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .k { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .v { font-size:28px; font-weight:650; margin-top:6px; font-variant-numeric: tabular-nums; }
+  .wide { grid-column: 1 / -1; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td, th { text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); }
+  .pill { padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; }
+  .estable { background:#d1fadf; color:var(--ok);} .alerta { background:#fef0c7; color:var(--warn);} .critico { background:#fee4e2; color:var(--bad);}
+  .muestra_insuficiente { background:var(--line); color:var(--muted); }
+  .bar { height:10px; border-radius:5px; background:var(--acc); }
+  .err { color:var(--bad); }
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Monitor de Churn · Telco</h1><div class="muted" id="modelo">Cargando…</div></div>
+  <div class="muted">Se actualiza cada 5 s · fuente: <code>/metrics</code></div>
+</header>
+<main>
+  <div class="card"><div class="k">Predicciones</div><div class="v" id="total">–</div></div>
+  <div class="card"><div class="k">Clientes en riesgo</div><div class="v" id="riesgo">–</div></div>
+  <div class="card"><div class="k">Ingresos/mes en riesgo</div><div class="v" id="ingresos">–</div></div>
+  <div class="card"><div class="k">Clientes priorizados</div><div class="v" id="prior">–</div></div>
+  <div class="card"><div class="k">Latencia p95</div><div class="v" id="lat">–</div></div>
+  <div class="card"><div class="k">Errores</div><div class="v" id="errores">–</div></div>
+  <div class="card wide"><div class="k">Distribución de riesgo</div><div id="dist"></div></div>
+  <div class="card wide"><div class="k">Drift (PSI por variable)</div><div id="drift"></div></div>
+</main>
+<script>
+  const fmt = n => n == null ? "–" : Number(n).toLocaleString("es-CO", {maximumFractionDigits: 2});
+  async function refrescar() {
+    try {
+      const r = await fetch("/metrics"); const m = await r.json();
+      const md = m.modelo || {};
+      document.getElementById("modelo").textContent = md.version
+        ? `Modelo v${md.version} (${md.algoritmo}) · umbral ${md.umbral_decision} · AUC offline ${md.metricas_offline.roc_auc}`
+        : "Modelo no cargado";
+      const n = m.negocio || {};
+      document.getElementById("total").textContent = fmt(m.predicciones_totales);
+      document.getElementById("riesgo").textContent = n.clientes_en_riesgo == null ? "–" : `${fmt(n.clientes_en_riesgo)} (${fmt(n.pct_en_riesgo*100)}%)`;
+      document.getElementById("ingresos").textContent = n.ingresos_mensuales_en_riesgo == null ? "–" : "$" + fmt(n.ingresos_mensuales_en_riesgo);
+      document.getElementById("prior").textContent = fmt(n.clientes_priorizados);
+      document.getElementById("lat").textContent = m.latencia_p95_ms == null ? "–" : fmt(m.latencia_p95_ms) + " ms";
+      document.getElementById("errores").textContent = fmt(m.errores_totales);
+      const d = m.distribucion_riesgo || {}; const tot = Object.values(d).reduce((a,b)=>a+b,0) || 1;
+      document.getElementById("dist").innerHTML = ["alto","medio","bajo"].map(k =>
+        `<div style="margin:8px 0"><div class="muted">${k}: ${fmt(d[k]||0)}</div><div class="bar" style="width:${(100*(d[k]||0)/tot).toFixed(1)}%"></div></div>`).join("");
+      const dr = m.drift || {};
+      let html = `<p>Estado global: <span class="pill ${dr.estado_global}">${dr.estado_global || "–"}</span></p>`;
+      if (dr.features) {
+        html += "<table><tr><th>Variable</th><th>PSI</th><th>Estado</th></tr>" +
+          Object.entries(dr.features).map(([k,v]) => `<tr><td>${k}</td><td>${v.psi}</td><td><span class="pill ${v.estado}">${v.estado}</span></td></tr>`).join("") + "</table>";
+      } else if (dr.actual != null) { html += `<p class="muted">Se necesitan ${dr.minimo_requerido} predicciones (hay ${dr.actual}).</p>`; }
+      document.getElementById("drift").innerHTML = html;
+    } catch (e) { document.getElementById("modelo").innerHTML = `<span class="err">No se pudo leer /metrics: ${e}</span>`; }
+  }
+  refrescar(); setInterval(refrescar, 5000);
+</script>
+</body>
+</html>
