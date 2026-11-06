@@ -1,5 +1,3 @@
-> **Repositorio del alumno**: el código de `src/churn/`, las pruebas y las especificaciones se construyen durante el taller con OpenCode y Spec Kit. Empieza por `plantillas/ASUM-DM_plantilla.md` y `prompts/PROMPTS_OPENCODE.md`. La solución está en `referencia/`.
-
 # Taller · Churn Telco con ASUM-DM + SDD + ECC + OpenCode + MLOps
 
 Repositorio plantilla del taller **"Integración de ASUM-DM, MLOps, Spec-Driven Development, skills ECC y modelos
@@ -154,7 +152,11 @@ curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" -
 | `GET /metrics` | Operación, negocio (clientes/ingresos en riesgo, priorizados) y drift (PSI) |
 | `GET /dashboard` | Panel visual que lee `/metrics` cada 5 s |
 
-## 7. Uso responsable
+## 7. Repo del alumno
+El repositorio del alumno ya está incluido en `02_repo_alumno/taller-churn-mlops-alumno/`. No hace falta generarlo:
+distribuye esa carpeta junto con el paquete del taller. La solución de referencia está en su carpeta `referencia/`.
+
+## 8. Uso responsable
 Este modelo **apoya** decisiones de retención: no debe usarse para negar servicios, cambiar precios ni tomar decisiones
 automatizadas sin revisión humana. No usa la edad para predecir y audita el impacto por grupo; los logs guardan IDs con hash.
 Los datos son sintéticos. Ver [docs/ETICA.md](docs/ETICA.md) y [docs/GOBERNANZA.md](docs/GOBERNANZA.md).
